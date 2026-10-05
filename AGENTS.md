@@ -1,0 +1,6 @@
+- Keep this as a single-page, mobile-first invitation; the emotional flow depends on uninterrupted scrolling.
+- Architecture: Simple React frontend (Vite) + Node.js/Express backend + PostgreSQL database
+- Guest confirmations are stored in PostgreSQL database (see DATABASE_SETUP.md for setup).
+- Backend requires DATABASE_URL environment variable to be set in backend/.env
+- Frontend runs on port 5173, Backend runs on port 3001
+- Vite proxy is configured to forward /api requests to the backend
