@@ -5,6 +5,13 @@ import { z } from "zod";
 import dotenv from "dotenv";
 
 dotenv.config();
+const dbUrl = new URL(process.env.DATABASE_URL);
+
+console.log("DATABASE DEBUG:");
+console.log("DB user:", dbUrl.username);
+console.log("DB host:", dbUrl.hostname);
+console.log("DB port:", dbUrl.port);
+console.log("DB database:", dbUrl.pathname);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
