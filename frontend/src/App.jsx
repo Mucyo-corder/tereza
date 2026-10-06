@@ -122,7 +122,7 @@ function App() {
       <section className="border-y border-border bg-card px-5 py-16 sm:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <p className="mt-5 text-xl leading-relaxed text-muted-foreground">
-            "Amaso y'Uwiteka ahora ayahanze abamukunda, akababera umurinzi ukomeye n'inkingi itajegajega."
+            "Amaso y'Uhoraho ahora ayahanze abamukunda, akababera umurinzi ukomeye n'inkingi itajegajega."
           </p>
           <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-primary">Mwene Siraki 34:16</p>
         </div>
