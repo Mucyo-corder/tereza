@@ -169,7 +169,7 @@ function App() {
                 onChange={(e) => setName(e.target.value)}
                 maxLength={100}
                 autoComplete="name"
-                placeholder="Kanda Aha"
+                placeholder="KANDA HANO"
                 className="input h-14 rounded-full bg-card px-6 text-base"
                 aria-describedby="form-message"
               />
