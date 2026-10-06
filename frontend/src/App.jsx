@@ -160,7 +160,8 @@ function App() {
             <form className="mt-9 space-y-4" onSubmit={submitGuest}>
               <label htmlFor="guest-name" className="block text-left text-sm font-medium">
                 Amazina yawe yose
-              </label>
+              </label><br></br>
+
               <input
                 id="guest-name"
                 name="name"
@@ -168,12 +169,12 @@ function App() {
                 onChange={(e) => setName(e.target.value)}
                 maxLength={100}
                 autoComplete="name"
-                placeholder="Andika amazina yawe"
+                placeholder="Kanda Aha"
                 className="input h-14 rounded-full bg-card px-6 text-base"
                 aria-describedby="form-message"
               />
               {message && <p id="form-message" role="alert" className="text-sm text-primary">{message}</p>}
-              <button
+               <br></br><button
                 type="submit"
                 className="btn btn-invitation btn-lg w-full text-sm uppercase tracking-[0.15em]"
                 disabled={submitting || !name.trim()}
