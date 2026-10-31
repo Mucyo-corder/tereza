@@ -68,7 +68,7 @@ function App() {
               DUKUNDE KILIZIYA
             </h1>
             <p className="mt-4 max-w-xl text-xs leading-5 sm:text-sm">
-              Kwizihiza Yubile ýimyaka 80 taliki 22/11/2026
+              Kwizihiza Yubile ýimyaka 80 ishize U Rwanda rutuwe Kristu Umwami taliki 22/11/2026
             </p>
           </div>
         </div>
