@@ -6,4 +6,4 @@ services:
     startCommand: serve -s dist -l 3000
     envVars:
       - key: VITE_API_URL
-        value: https://dukunde-kiliziya-api.onrender.com
+        value: https://dukundekiliziyaubutumire.onrender.com
