@@ -42,22 +42,26 @@ const guestSchema = z.object({
 
 app.get("/api/guests", async (req, res) => {
   try {
+    console.log("Fetching guests from database...");
     const result = await pool.query(
       "SELECT id, name, COALESCE(phone, '') as phone, submitted_at FROM guests ORDER BY submitted_at ASC"
     );
+    console.log("Guests fetched successfully:", result.rows.length);
     res.json(result.rows);
   } catch (error) {
     console.error("Error fetching guests:", error);
-    res.status(500).json({ error: "Failed to fetch guests" });
+    res.status(500).json({ error: "Failed to fetch guests", details: error.message });
   }
 });
 
 app.post("/api/guests", async (req, res) => {
   try {
+    console.log("Received guest request:", req.body);
     const { name, phone } = guestSchema.parse(req.body);
     const cleanName = name.trim().replace(/\s+/g, " ");
     const cleanPhone = phone ? phone.trim() : null;
 
+    console.log("Attempting to insert guest:", cleanName);
     let result;
     if (cleanPhone) {
       result = await pool.query(
@@ -71,8 +75,10 @@ app.post("/api/guests", async (req, res) => {
       );
     }
 
+    console.log("Guest added successfully:", result.rows[0]);
     res.status(201).json(result.rows[0]);
   } catch (error) {
+    console.error("Error adding guest:", error);
     if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid input. Name must be 2-100 characters." });
     }
@@ -95,8 +101,7 @@ app.post("/api/guests", async (req, res) => {
         return res.status(500).json({ error: "Failed to add guest" });
       }
     }
-    console.error("Error adding guest:", error);
-    res.status(500).json({ error: "Failed to add guest" });
+    res.status(500).json({ error: "Failed to add guest", details: error.message });
   }
 });
 
