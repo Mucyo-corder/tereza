@@ -36,12 +36,25 @@ Backend requires:
 
 ## Deployment
 
-### Frontend Deployment
-Deploy the `frontend` folder to Vercel, Netlify, or similar platform.
+### Frontend Deployment (Render)
+1. Create a new Web Service on Render
+2. Connect your GitHub repository
+3. Set Root Directory to `frontend`
+4. Build Command: `npm install && npm run build`
+5. Publish Directory: `dist`
+6. Add Environment Variable:
+   - `VITE_API_URL`: Your backend URL (e.g., `https://dukunde-kiliziya-api.onrender.com`)
+7. Deploy
 
-### Backend Deployment
-Deploy the `backend` folder to Render, Railway, or similar platform.
-Set the `DATABASE_URL` environment variable in your deployment platform.
+### Backend Deployment (Render)
+1. Create a new Web Service on Render
+2. Connect your GitHub repository
+3. Set Root Directory to `backend`
+4. Build Command: `npm install`
+5. Start Command: `node server.js`
+6. Add Environment Variable:
+   - `DATABASE_URL`: Your Supabase PostgreSQL connection string
+7. Deploy
 
 ## Database Setup
 

@@ -4,7 +4,7 @@ import {
   Users,
 } from "lucide-react";
 
-const API_BASE = `${import.meta.env.VITE_API_URL || "https://tereza-michel-wedding-api.onrender.com"}/api`;
+const API_BASE = `${import.meta.env.VITE_API_URL || "https://dukunde-kiliziya-api.onrender.com"}/api`;
 
 function App() {
   const [name, setName] = useState("");
