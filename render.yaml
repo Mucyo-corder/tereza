@@ -12,7 +12,7 @@ services:
     name: dukunde-kiliziya-frontend
     env: node
     buildCommand: cd frontend && npm install && npm run build
-    startCommand: cd frontend && serve -s dist -l 3000
+    startCommand: cd frontend && npm start
     envVars:
       - key: VITE_API_URL
         value: https://dukunde-kiliziya-backend.onrender.com
