@@ -125,6 +125,9 @@ function App() {
               Ohereza
             </button>
           </form>
+          <p className="mt-4 text-xs font-semibold text-white">
+            Amafranga ya Contribution y'urugendo ni 15000frw (ticket na lunch)
+          </p>
         </div>
       </section>
 
