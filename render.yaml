@@ -2,9 +2,8 @@ services:
   - type: web
     name: dukunde-kiliziya-backend
     env: node
-    root: backend
-    buildCommand: npm install
-    startCommand: node server.js
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && node server.js
     envVars:
       - key: DATABASE_URL
         sync: false
@@ -12,9 +11,8 @@ services:
   - type: web
     name: dukunde-kiliziya-frontend
     env: node
-    root: frontend
-    buildCommand: npm install && npm run build
-    startCommand: serve -s dist -l 3000
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && serve -s dist -l 3000
     envVars:
       - key: VITE_API_URL
         value: https://dukunde-kiliziya-backend.onrender.com
