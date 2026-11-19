@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import {
   Heart,
   Users,
+  Download,
 } from "lucide-react";
 
 const API_BASE = `${import.meta.env.VITE_API_URL || "https://dukunde-kiliziya-backend.onrender.com"}/api`;
@@ -13,6 +14,8 @@ function App() {
   const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportMessage, setExportMessage] = useState("");
 
   const fetchGuests = async () => {
     try {
@@ -55,6 +58,39 @@ function App() {
       setMessage(error.message);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const exportToExcel = async () => {
+    setExporting(true);
+    setExportMessage("");
+
+    try {
+      const res = await fetch(`${API_BASE}/guests/export`);
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to export Excel file");
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Registration_Report_${new Date().toISOString().split('T')[0]}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      setExportMessage("Excel file downloaded successfully!");
+      setTimeout(() => setExportMessage(""), 3000);
+    } catch (error) {
+      console.error("Export error:", error);
+      setExportMessage(error.message || "Failed to export Excel file");
+      setTimeout(() => setExportMessage(""), 5000);
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -140,6 +176,34 @@ function App() {
             <p className="font-display text-4xl text-primary">{guests.length}</p>
             <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em]">Abemeje</p>
           </div>
+
+          {guests.length > 0 && (
+            <div className="mt-4 text-center">
+              <button
+                onClick={exportToExcel}
+                disabled={exporting}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.15em] py-2 px-4"
+                style={{ backgroundColor: '#006400', color: 'white', borderRadius: '8px' }}
+              >
+                {exporting ? (
+                  <>
+                    <span className="inline-block animate-spin mr-2">⏳</span>
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Download size={14} />
+                    Export to Excel
+                  </>
+                )}
+              </button>
+              {exportMessage && (
+                <p className={`mt-2 text-xs ${exportMessage.includes("success") ? "text-green-600" : "text-red-600"}`}>
+                  {exportMessage}
+                </p>
+              )}
+            </div>
+          )}
           {guests.length > 0 ? (
             <div className="mt-6 overflow-hidden rounded-lg border border-border bg-card shadow-sm">
               <table className="w-full">

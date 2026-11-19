@@ -3,6 +3,7 @@ import cors from "cors";
 import { Pool } from "pg";
 import { z } from "zod";
 import dotenv from "dotenv";
+import ExcelJS from "exceljs";
 
 dotenv.config();
 const dbUrl = new URL(process.env.DATABASE_URL);
@@ -115,6 +116,104 @@ app.delete("/api/guests", async (req, res) => {
   } catch (error) {
     console.error("Error deleting guests:", error);
     res.status(500).json({ error: "Failed to delete guests" });
+  }
+});
+
+app.get("/api/guests/export", async (req, res) => {
+  try {
+    console.log("Fetching all guests for Excel export...");
+    const result = await pool.query(
+      "SELECT id, name, COALESCE(phone, '') as phone, submitted_at FROM guests ORDER BY submitted_at ASC"
+    );
+    const guests = result.rows;
+    console.log(`Exporting ${guests.length} guests to Excel...`);
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Registration Report");
+
+    worksheet.mergeCells("A1:C1");
+    const titleCell = worksheet.getCell("A1");
+    titleCell.value = "DUKUNDE KILIZIYA - Registration Report";
+    titleCell.font = { size: 16, bold: true };
+    titleCell.alignment = { horizontal: "center" };
+
+    worksheet.mergeCells("A2:C2");
+    const dateCell = worksheet.getCell("A2");
+    dateCell.value = `Generated: ${new Date().toLocaleString()}`;
+    dateCell.font = { size: 10, italic: true };
+    dateCell.alignment = { horizontal: "center" };
+
+    worksheet.addRow([]);
+
+    const headers = ["#", "Full Name", "Phone Number"];
+    const headerRow = worksheet.addRow(headers);
+
+    headerRow.eachCell((cell) => {
+      cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FF006400" }
+      };
+      cell.alignment = { horizontal: "center" };
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+      };
+    });
+
+    guests.forEach((guest, index) => {
+      const row = worksheet.addRow([
+        index + 1,
+        guest.name,
+        guest.phone || ""
+      ]);
+
+      row.eachCell((cell, colNumber) => {
+        cell.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" }
+        };
+
+        if (colNumber === 3) {
+          cell.numFmt = "@";
+        }
+      });
+    });
+
+    const countRowIndex = guests.length + 5;
+    const countRow = worksheet.addRow(["", "Total Registered:", guests.length]);
+    countRow.getCell(2).font = { bold: true };
+    countRow.getCell(3).font = { bold: true };
+
+    countRow.eachCell((cell) => {
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+      };
+    });
+
+    worksheet.getColumn(1).width = 8;
+    worksheet.getColumn(2).width = 35;
+    worksheet.getColumn(3).width = 20;
+
+    const filename = `Registration_Report_${new Date().toISOString().split('T')[0]}.xlsx`;
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+
+    await workbook.xlsx.write(res);
+    res.end();
+
+    console.log("Excel export completed successfully");
+  } catch (error) {
+    console.error("Error exporting guests to Excel:", error);
+    res.status(500).json({ error: "Failed to export guests to Excel", details: error.message });
   }
 });
 
